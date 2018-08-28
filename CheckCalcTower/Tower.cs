@@ -13,6 +13,10 @@ namespace CheckCalcTower
         private int privId;
         private string name;
         public Vector3 position;
+        private double delta;
+
+        public double Delta { get => delta; set => delta = value; }
+        public int Id { get => privId; }
 
         public Tower(Vector3 _pos, string _name)
         {
@@ -25,6 +29,8 @@ namespace CheckCalcTower
         {
             Console.WriteLine("Tower #{0}\tpos - {1}", privId, position.ToString());
         }
+
+        
 
     }
 }
