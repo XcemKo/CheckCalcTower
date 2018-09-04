@@ -80,11 +80,11 @@ namespace CheckCalcTower
                     double num = time + towers[i-2].Delta;
                     firstCoord = towers[i-2].position;
                     //num = num / Math.Pow(2, 38);
-                    Console.WriteLine("\n{0}:{1} ",i, num);
+                    Console.WriteLine("\n{0}:{1} ",i-2, num);
                     ret.Add(new MetkaNew(  numberOfPacket, 
                                         i-2,
                                         i-2,
-                                        //num,
+                                        //num,  
                                         num + fixedKoef[i - 2],
                                         firstCoord
                                         )
@@ -98,7 +98,7 @@ namespace CheckCalcTower
                     Vector3 coordTower = towers[i - 2].position;
                     double num = time + (Vector3.Distance(firstCoord,coordTower)/Other.LightSpeed) + towers[i - 2].Delta;
                     //num = num / Math.Pow(2, 38);
-                    Console.WriteLine("{0} ", num);
+                    Console.WriteLine("{0}:{1} -- {2}",i-2, num, (Vector3.Distance(firstCoord, coordTower) / Other.LightSpeed));
                     ret.Add(new MetkaNew(   numberOfPacket,
                                             firstTower-2, 
                                             i-2, 
@@ -109,7 +109,7 @@ namespace CheckCalcTower
             metki.AddRange(ret); numberOfPacket++;
             //Console.Write("  {0}:{1}:{2}", parseCoord(str).X, parseCoord(str).Y, parseCoord(str).Z);
             // Console.WriteLine();
-            time += 0.000_2f;
+            time += 0.02f;
         }
 
         public void CalcKoef()
@@ -148,25 +148,28 @@ namespace CheckCalcTower
                         koef[i, i]++;
                         if (metka.from == i)
                         {
+                            
                             koef[i, metka.to]--;
-                            double c = (Vector3.Distance(parent.pos, towers[metka.from].position) -
-                                                        Vector3.Distance(parent.pos, towers[metka.to].position)
-                                                    ) / Other.LightSpeed;
+                            //double c = (Vector3.Distance(parent.pos, towers[metka.from].position) -
+                            //                            Vector3.Distance(parent.pos, towers[metka.to].position)
+                            //                        ) / Other.LightSpeed;
+                            double c = (Vector3.Distance(towers[i].position, towers[metka.to].position) / Other.LightSpeed);
                             solKoef[i] -= metka.time - parent.time - c;
                         }
                         else
                         {
+                            
                             koef[i, metka.from]--;
-                            double c = (Vector3.Distance(parent.pos, towers[metka.from].position) -
-                                                        Vector3.Distance(parent.pos, towers[metka.to].position)
-                                                    ) / Other.LightSpeed;
+                            //double c = (Vector3.Distance(parent.pos, towers[metka.from].position) -
+                            //                            Vector3.Distance(parent.pos, towers[metka.to].position)
+                            //                        ) / Other.LightSpeed;
+                            double c = (Vector3.Distance(towers[i].position, towers[metka.from].position) / Other.LightSpeed);
                             solKoef[i] -= 0 - metka.time + parent.time + c;
                         }
-                        Console.Write("Find {0} {1} -> [{2}{3}]++ \t [{4}{5}]--", metka.from, metka.to
-                                                                                     , i + 1, i + 1
-                                          , i, (metka.from == i) ? metka.to : metka.from);
-
-                        Console.WriteLine("\t{0:.000_000_000}   -   {1:.000_000_000}", parent.time, metka.time);
+                        //Console.Write("Find {0} {1} -> [{2}{3}]++ \t [{4}{5}]--", metka.from, metka.to
+                        //                                                             , i + 1, i + 1
+                        //                  , i, (metka.from == i) ? metka.to : metka.from);
+                        //Console.WriteLine("\t{0:.000_000_000}   -   {1:.000_000_000}", parent.time, metka.time);
                     }
                 }
                 //Console.WriteLine();
@@ -201,6 +204,7 @@ namespace CheckCalcTower
                         else
                             koef[i - 1, j - 1] = koef[i, j];
                     }
+
 
                 }
                 /*/(-2);*/
