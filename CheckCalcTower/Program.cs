@@ -21,25 +21,32 @@ namespace CheckCalcTower
 
         static void Main(string[] args)
         {
-
-
             double[] deltaMap = {
-                0.000_010,//src31_6_0,
-                0.000_015,//src31_32_0,
-                0.000_008,//src31_32_1,
-                0.000_010,//src31_32_2,
-                0.000_025,//src31_32_3,
-                0.000_040,//src31_40_0,
-                -0.000_005,//src31_130_0,
-                -0.000_012,//src31_132_0,
-                -0.000_004//src31_132_1,
-                -0.000_009,//src31_132_2,
-                0.000_020,//src31_132_3,
-                0.000_006,//src31_134_0
+                0.000_00,//src31_6_0,
+
+                0.000_132,//src31_32_0,
+                0.000_232,//src31_32_1,
+                0.000_332,//src31_32_2,
+                0.000_432,//src31_32_3,
+
+                0.000_030,//src31_40_0,
+
+                0.000_130,//src31_130_0,
+
+                -0.000_1321,//src31_132_0,
+                -0.000_1322,//src31_132_1,
+                -0.000_1323,//src31_132_2,
+                -0.000_1324,//src31_132_3,
+
+                0.000_134,//src31_134_0
             };
 
+            double[] omegaMap = deltaMap;
+            for (int j = 0; j < omegaMap.Length; j++)
+                omegaMap[j] = Other.rnd.Next(-10, 10);
+
             for (int j = 0; j < deltaMap.Length; j++)
-                Other.towers[j].Delta = deltaMap[j];
+                Other.towers[j].Delta = deltaMap[j] + omegaMap[j];
 
             foreach (var t in Other.towers)
                 Console.WriteLine("{0} --> {1}", t.Id,t.Delta);
@@ -59,25 +66,39 @@ namespace CheckCalcTower
 
             fs.ReadLine();
             string tmp;
-            int i = 0;
-            i = 0;
-            while (fs.Peek() != -1)
+            int i = 0; int iter = 0;
+            while (fs.Peek() != -1 )
             {
                 tmp = fs.ReadLine();
                 string[] array = tmp.Split(',');
-                if (CheckLenght(array))
-                {
+                if (CheckLenght(array)){
                     calcCenter.GetMetkiFromString(array); i++;
-                    if (i > 10) break;
-                    //if (i > 10000) break;
+                    if (i > 100){
+
+                        calcCenter.CalcKoef();
+                        deltas = calcCenter.Delta();
+
+                        iter++;
+                        i = 0;
+                        calcCenter.reset();
+
+                        for (int j = 0; j < deltaMap.Length; j++){
+                            omegaMap[j] = Other.rnd.Next(-10, 10);
+                            Other.towers[j].Delta = deltaMap[j] + omegaMap[j];
+                        }
+
+                        break;
+                    }
+                    if (iter == 20)
+                        break;
                 }
             }
 
-            calcCenter.CalcKoef();
-            deltas = calcCenter.Delta();
+            
             for (int j = 0; j < towersSize; j++)
             {
-                Console.Write("{0:E2}\t", deltas[j]);
+                Console.Write("{0:.000_000}\t", deltas[j]);
+                if ((j+1) % 5 == 0) Console.WriteLine();
             }
             Console.WriteLine();
 

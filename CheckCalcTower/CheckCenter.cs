@@ -80,7 +80,7 @@ namespace CheckCalcTower
                     double num = time + towers[i-2].Delta;
                     firstCoord = towers[i-2].position;
                     //num = num / Math.Pow(2, 38);
-                    Console.WriteLine("\n{0}:{1} ",i-2, num);
+                    //Console.WriteLine("\n{0}:{1} ",i-2, num);
                     ret.Add(new MetkaNew(  numberOfPacket, 
                                         i-2,
                                         i-2,
@@ -98,7 +98,7 @@ namespace CheckCalcTower
                     Vector3 coordTower = towers[i - 2].position;
                     double num = time + (Vector3.Distance(firstCoord,coordTower)/Other.LightSpeed) + towers[i - 2].Delta;
                     //num = num / Math.Pow(2, 38);
-                    Console.WriteLine("{0}:{1} -- {2}",i-2, num, (Vector3.Distance(firstCoord, coordTower) / Other.LightSpeed));
+                    //Console.WriteLine("{0}:{1} -- {2}",i-2, num, (Vector3.Distance(firstCoord, coordTower) / Other.LightSpeed));
                     ret.Add(new MetkaNew(   numberOfPacket,
                                             firstTower-2, 
                                             i-2, 
@@ -109,7 +109,7 @@ namespace CheckCalcTower
             metki.AddRange(ret); numberOfPacket++;
             //Console.Write("  {0}:{1}:{2}", parseCoord(str).X, parseCoord(str).Y, parseCoord(str).Z);
             // Console.WriteLine();
-            time += 0.02f;
+            time += 0.2f;
         }
 
         public void CalcKoef()
@@ -260,9 +260,9 @@ namespace CheckCalcTower
             Console.Write("ret = [ ");
             for (int i = 0; i < size; i++)
                 if (solveDelta[i] != 0)
-                    Console.Write("{0:.000_000_000}; ", solveDelta[i]);
+                    Console.WriteLine("{0:.000_000_000}; ", solveDelta[i]);
                 else
-                    Console.Write("{0}; ", solveDelta[i]);
+                    Console.WriteLine("{0}; ", solveDelta[i]);
             Console.WriteLine("] info - {0}", info);
 
             return solveDelta;
@@ -278,6 +278,16 @@ namespace CheckCalcTower
                     Console.Write("{0}\t", koef[i, j]);
                 Console.WriteLine("| {0}", solKoef[i]);
             }
+        }
+
+        public void reset() {
+            numberOfPacket = 1;
+            metki = new List<MetkaNew>();
+            koef = new double[towers.Count, towers.Count];
+            solKoef = new double[towers.Count];
+            solveDelta = new double[towers.Count];
+            fixedKoef = new double[towers.Count];
+            time = 0.000_01f;
         }
     }
 }

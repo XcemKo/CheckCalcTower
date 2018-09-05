@@ -10,7 +10,7 @@ namespace CheckCalcTower
     static class Other
     {
         public const double LightSpeed = 299792458d;
-
+        public static Random rnd = new Random();
         public static Vector2 coor31_6 = new Vector2(-53296.00f, -13536.71f);  //src31_6
         public static Vector2 coor31_32 = new Vector2(10115.37f, 5723.23f);    //src31_32
         public static Vector2 coor31_40 = new Vector2(-4341.66f, -64991.58f);  //src31_40
