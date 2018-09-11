@@ -228,7 +228,7 @@ namespace CheckCalcTower
             deleteRowColumn(index: 6);
 
             //Console.WriteLine("===============");
-            printKoef(1);
+            //printKoef(1);
             double smallDiag = koef[0, 0];
             int index = 0;
             for (int i = 1; i < size - 1; i++)
@@ -239,8 +239,8 @@ namespace CheckCalcTower
                 }
             index = 0;
             deleteRowColumn(index);
-            Console.WriteLine("index = {0}===============", index);
-            printKoef(2);
+            //Console.WriteLine("index = {0}===============", index);
+            //printKoef(2);
 
             int info = 0; alglib.densesolverreport reporter;
             alglib.rmatrixsolve(koef, size - 2, solKoef, out info, out reporter, out ret);
@@ -260,10 +260,10 @@ namespace CheckCalcTower
             Console.Write("ret = [ ");
             for (int i = 0; i < size; i++)
                 if (solveDelta[i] != 0)
-                    Console.WriteLine("{0:.000_000_000}; ", solveDelta[i]);
+                    Console.Write("{0:.000_000}; ", solveDelta[i]);
                 else
-                    Console.WriteLine("{0}; ", solveDelta[i]);
-            Console.WriteLine("] info - {0}", info);
+                    Console.Write("{0}; ", solveDelta[i]);
+            //Console.WriteLine("] info - {0}", info);
 
             return solveDelta;
         }

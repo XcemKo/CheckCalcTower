@@ -21,15 +21,17 @@ namespace CheckCalcTower
 
         static void Main(string[] args)
         {
+            int countIter = 5;
             double[] deltaMap = {
                 0.000_00,//src31_6_0,
 
-                0.000_132,//src31_32_0,
-                0.000_232,//src31_32_1,
-                0.000_332,//src31_32_2,
-                0.000_432,//src31_32_3,
+                //0.000_132,//src31_32_0,
+                0.000_001,//src31_32_0,
+                0.000_002,//src31_32_1,
+                0.000_003,//src31_32_2,
+                0.000_004,//src31_32_3,
 
-                0.000_030,//src31_40_0,
+                0.000_005,//src31_40_0,
 
                 0.000_130,//src31_130_0,
 
@@ -41,16 +43,15 @@ namespace CheckCalcTower
                 0.000_134,//src31_134_0
             };
 
-            double[] omegaMap = deltaMap;
-            for (int j = 0; j < omegaMap.Length; j++)
-                omegaMap[j] = Other.rnd.Next(-10, 10);
-
+            
+            //for (int j = 0; j < omegaMap.Length; j++)
+            //    omegaMap[j] = Other.rnd.Next(-10, 10);
             for (int j = 0; j < deltaMap.Length; j++)
-                Other.towers[j].Delta = deltaMap[j] + omegaMap[j];
+                Other.towers[j].Delta = deltaMap[j];// + omegaMap[j];
 
             foreach (var t in Other.towers)
                 Console.WriteLine("{0} --> {1}", t.Id,t.Delta);
-
+            
             int towersSize = Other.towers.Count();
 
             CheckCenter calcCenter = new CheckCenter(Other.towers);
@@ -60,14 +61,16 @@ namespace CheckCalcTower
             //Console.WriteLine(float.Parse("3.1488", culture));
             foreach (var tow in Other.towers)
                 tow.Print();
-
-            double[] deltas = new double[towersSize];
+            double[] omegaMap = new double[towersSize];
+            double[,] deltas = new double[countIter,towersSize];
+            double[,] omegas = new double[countIter+1, towersSize];
+            double[] tmpDelta = new double[towersSize];
             StreamReader fs = new StreamReader("C:\\Users\\Xcem\\source\\repos\\CsvParse\\CsvParse\\log8clean.csv");
 
             fs.ReadLine();
             string tmp;
             int i = 0; int iter = 0;
-            while (fs.Peek() != -1 )
+            while (fs.Peek() != -1)
             {
                 tmp = fs.ReadLine();
                 string[] array = tmp.Split(',');
@@ -76,32 +79,74 @@ namespace CheckCalcTower
                     if (i > 100){
 
                         calcCenter.CalcKoef();
-                        deltas = calcCenter.Delta();
-
-                        iter++;
+                        tmpDelta = calcCenter.Delta();
+                        for (int j=0;j<towersSize;j++)
+                            deltas[iter,j] = tmpDelta[j];
+                        //Console.WriteLine(iter * i);
                         i = 0;
                         calcCenter.reset();
-
-                        for (int j = 0; j < deltaMap.Length; j++){
-                            omegaMap[j] = Other.rnd.Next(-10, 10);
+                        
+                        for (int j = 1; j < deltaMap.Length; j++){
+                            omegaMap[j] = Other.rnd.Next(0, 15)/1000_000f;
+                            omegas[iter+1, j] = omegaMap[j];
                             Other.towers[j].Delta = deltaMap[j] + omegaMap[j];
                         }
-
+                        iter++;
+                        Console.WriteLine();
+                        //break;
+                    }
+                    if (iter >= countIter)
+                    {
+                        Console.WriteLine(iter);
                         break;
                     }
-                    if (iter == 20)
-                        break;
+                      
                 }
             }
 
-            
-            for (int j = 0; j < towersSize; j++)
+
+            //for (int j = 0; j < towersSize; j++)
+            //{
+            //    Console.Write("{0:.000_000}\t", deltas[j]);
+            //    if ((j+1) % 5 == 0) Console.WriteLine();
+            //}
+            Console.WriteLine();
+            Console.WriteLine("==OMEGAS==");
+            for (i = 0; i < countIter-1; i++)
             {
-                Console.Write("{0:.000_000}\t", deltas[j]);
-                if ((j+1) % 5 == 0) Console.WriteLine();
+                for(int j=0; j<towersSize;j++)
+                    Console.Write("{0:.000_000} {1:.000_000} |", deltas[i, j],omegas[i,j]);
+                Console.WriteLine();
+            }
+            double[] avDelta = new double[towersSize];
+            for (i=0;i< countIter; i++) {
+                for (int j = 0; j < towersSize; j++)
+                    avDelta[j] += deltas[i, j];
             }
             Console.WriteLine();
-
+            Console.WriteLine("==avDelta==");
+            for (int j = 0; j < towersSize; j++)
+                avDelta[j] = avDelta[j] / countIter;
+            for (int j = 0; j < towersSize; j++)
+            {
+                Console.Write("{0:.000_000}\t", avDelta[j]);
+                if ((j + 1) % 5 == 0) Console.WriteLine();
+            }
+            Console.WriteLine();
+            double[] sigma = new double[towersSize];
+            for (int j = 0; j < towersSize; j++)
+            {
+                for (i = 0; i < countIter; i++)
+                    sigma[j] += deltas[i, j] - avDelta[j];
+                sigma[j] = sigma[j] / (countIter - 1);
+            }
+            Console.WriteLine("==SIGMA==");
+            for (int j = 0; j < towersSize; j++)
+            {
+                Console.Write("{0:.000_000_000}\t", sigma[j]);
+                if ((j + 1) % 5 == 0) Console.WriteLine();
+            }
+            Console.WriteLine();
         }
 
     }
