@@ -19,9 +19,17 @@ namespace CheckCalcTower
             return countLenght > 1 ? true : false;
         }
 
+        static double Normal(double mean, double stdDev) {
+            double u1 = 1.0 - Other.rnd.NextDouble(); //uniform(0,1] random doubles
+            double u2 = 1.0 - Other.rnd.NextDouble();
+            double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
+                         Math.Sin(2.0 * Math.PI * u2); //random normal(0,1)
+            return (mean + stdDev * randStdNormal);
+        }
+
         static void Main(string[] args)
         {
-            int countIter = 5;
+            int countIter = 50;
             double[] deltaMap = {
                 0.000_00,//src31_6_0,
 
@@ -65,8 +73,8 @@ namespace CheckCalcTower
             double[,] deltas = new double[countIter,towersSize];
             double[,] omegas = new double[countIter+1, towersSize];
             double[] tmpDelta = new double[towersSize];
-            StreamReader fs = new StreamReader("C:\\Users\\Xcem\\source\\repos\\CsvParse\\CsvParse\\log8clean.csv");
 
+            StreamReader fs = new StreamReader("C:\\Users\\Xcem\\source\\repos\\CsvParse\\CsvParse\\log8clean.csv");
             fs.ReadLine();
             string tmp;
             int i = 0; int iter = 0;
@@ -81,14 +89,15 @@ namespace CheckCalcTower
                         calcCenter.CalcKoef();
                         tmpDelta = calcCenter.Delta();
                         for (int j=0;j<towersSize;j++)
-                            deltas[iter,j] = tmpDelta[j];
+                            deltas[iter,j] = tmpDelta[j] * 1000_000f;
                         //Console.WriteLine(iter * i);
                         i = 0;
                         calcCenter.reset();
                         
                         for (int j = 1; j < deltaMap.Length; j++){
-                            omegaMap[j] = Other.rnd.Next(0, 15)/1000_000f;
-                            omegas[iter+1, j] = omegaMap[j];
+                            //omegaMap[j] = Other.rnd.Next(0, 15)/1000_000f;
+                            omegaMap[j] = Normal(0,10)/ 1000_000f;
+                            omegas[iter+1, j] = omegaMap[j] * 1000_000f;
                             Other.towers[j].Delta = deltaMap[j] + omegaMap[j];
                         }
                         iter++;
@@ -103,19 +112,12 @@ namespace CheckCalcTower
                       
                 }
             }
-
-
-            //for (int j = 0; j < towersSize; j++)
-            //{
-            //    Console.Write("{0:.000_000}\t", deltas[j]);
-            //    if ((j+1) % 5 == 0) Console.WriteLine();
-            //}
             Console.WriteLine();
             Console.WriteLine("==OMEGAS==");
-            for (i = 0; i < countIter-1; i++)
+            for (i = 0; i < countIter; i++)
             {
                 for(int j=0; j<towersSize;j++)
-                    Console.Write("{0:.000_000} {1:.000_000} |", deltas[i, j],omegas[i,j]);
+                    Console.Write("{0:00.0} {1:00.0} |", deltas[i, j],omegas[i,j]);
                 Console.WriteLine();
             }
             double[] avDelta = new double[towersSize];
@@ -129,7 +131,7 @@ namespace CheckCalcTower
                 avDelta[j] = avDelta[j] / countIter;
             for (int j = 0; j < towersSize; j++)
             {
-                Console.Write("{0:.000_000}\t", avDelta[j]);
+                Console.Write("{0:00.00}\t", avDelta[j]);
                 if ((j + 1) % 5 == 0) Console.WriteLine();
             }
             Console.WriteLine();
@@ -137,13 +139,13 @@ namespace CheckCalcTower
             for (int j = 0; j < towersSize; j++)
             {
                 for (i = 0; i < countIter; i++)
-                    sigma[j] += deltas[i, j] - avDelta[j];
+                    sigma[j] += Math.Pow(deltas[i, j] - avDelta[j],2);
                 sigma[j] = sigma[j] / (countIter - 1);
             }
             Console.WriteLine("==SIGMA==");
             for (int j = 0; j < towersSize; j++)
             {
-                Console.Write("{0:.000_000_000}\t", sigma[j]);
+                Console.Write("{0:.0}\t", sigma[j]/countIter);
                 if ((j + 1) % 5 == 0) Console.WriteLine();
             }
             Console.WriteLine();
