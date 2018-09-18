@@ -51,9 +51,6 @@ namespace CheckCalcTower
                 0.000_134,//src31_134_0
             };
 
-            
-            //for (int j = 0; j < omegaMap.Length; j++)
-            //    omegaMap[j] = Other.rnd.Next(-10, 10);
             for (int j = 0; j < deltaMap.Length; j++)
                 Other.towers[j].Delta = deltaMap[j];// + omegaMap[j];
 
@@ -139,13 +136,13 @@ namespace CheckCalcTower
             for (int j = 0; j < towersSize; j++)
             {
                 for (i = 0; i < countIter; i++)
-                    sigma[j] += Math.Pow(deltas[i, j] - avDelta[j],2);
+                    sigma[j] += Math.Pow(deltas[i, j] - avDelta[j], 2);
                 sigma[j] = sigma[j] / (countIter - 1);
             }
             Console.WriteLine("==SIGMA==");
             for (int j = 0; j < towersSize; j++)
             {
-                Console.Write("{0:.0}\t", sigma[j]/countIter);
+                Console.Write("{0:.0}\t", Math.Sqrt(sigma[j]));
                 if ((j + 1) % 5 == 0) Console.WriteLine();
             }
             Console.WriteLine();
