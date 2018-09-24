@@ -34,16 +34,16 @@ namespace CheckCalcTower
 
     class CheckCenter
     {
-        int numberOfPacket;
-        private List<MetkaNew> metki;
-        private List<Tower> towers;
-        private CultureInfo culture;
-        double[,] koef;
-        double[] solKoef;
-        double[] solveDelta;
-        double[] fixedKoef;
+        protected int numberOfPacket;
+        protected List<MetkaNew> metki;
+        protected List<Tower> towers;
+        protected CultureInfo culture;
+        protected double[,] koef;
+        protected double[] solKoef;
+        protected double[] solveDelta;
+        protected double[] fixedKoef;
 
-        double time;
+        protected double time;
 
         public CheckCenter(List<Tower> _tower)
         {
