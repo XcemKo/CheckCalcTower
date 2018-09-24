@@ -71,6 +71,11 @@ namespace CheckCalcTower
             double[,] omegas = new double[countIter+1, towersSize];
             double[] tmpDelta = new double[towersSize];
 
+            FileStream file1 = new FileStream("C:\\Users\\Xcem\\source\\repos\\CheckCalcTower\\CheckCalcTower\\deltas.txt", FileMode.Create, FileAccess.ReadWrite);
+            FileStream file2 = new FileStream("C:\\Users\\Xcem\\source\\repos\\CheckCalcTower\\CheckCalcTower\\other.txt", FileMode.Create, FileAccess.ReadWrite);
+            StreamWriter writerDelta = new StreamWriter(file1);
+            StreamWriter writerOther = new StreamWriter(file2);
+
             StreamReader fs = new StreamReader("C:\\Users\\Xcem\\source\\repos\\CsvParse\\CsvParse\\log8clean.csv");
             fs.ReadLine();
             string tmp;
@@ -81,22 +86,30 @@ namespace CheckCalcTower
                 string[] array = tmp.Split(',');
                 if (CheckLenght(array)){
                     calcCenter.GetMetkiFromString(array); i++;
-                    if (i > 100){
+
+                    for (int j = 1; j < deltaMap.Length; j++)
+                    {
+                        //omegaMap[j] = Other.rnd.Next(0, 15)/1000_000f;
+                        omegaMap[j] = Normal(0, 10) / 1000_000f;
+
+                        //omegas[iter + 1, j] = omegaMap[j] * 1000_000f;
+                        Other.towers[j].Delta = deltaMap[j] + omegaMap[j];
+                    }
+
+                    if (i > 250){
 
                         calcCenter.CalcKoef();
                         tmpDelta = calcCenter.Delta();
-                        for (int j=0;j<towersSize;j++)
-                            deltas[iter,j] = tmpDelta[j] * 1000_000f;
+                        for (int j = 0; j < towersSize; j++)
+                        {
+                            deltas[iter, j] = tmpDelta[j] * 1000_000f;
+                            writerDelta.Write("{0}\t", deltas[iter, j]);
+                        }
+                        writerDelta.WriteLine("{0}",iter*i);
                         //Console.WriteLine(iter * i);
                         i = 0;
                         calcCenter.reset();
                         
-                        for (int j = 1; j < deltaMap.Length; j++){
-                            //omegaMap[j] = Other.rnd.Next(0, 15)/1000_000f;
-                            omegaMap[j] = Normal(0,10)/ 1000_000f;
-                            omegas[iter+1, j] = omegaMap[j] * 1000_000f;
-                            Other.towers[j].Delta = deltaMap[j] + omegaMap[j];
-                        }
                         iter++;
                         Console.WriteLine();
                         //break;
@@ -106,17 +119,26 @@ namespace CheckCalcTower
                         Console.WriteLine(iter);
                         break;
                     }
+
                       
                 }
             }
+            fs.Close();
+
             Console.WriteLine();
-            Console.WriteLine("==OMEGAS==");
-            for (i = 0; i < countIter; i++)
-            {
-                for(int j=0; j<towersSize;j++)
-                    Console.Write("{0:00.0} {1:00.0} |", deltas[i, j],omegas[i,j]);
-                Console.WriteLine();
-            }
+            //Console.WriteLine("==OMEGAS==");
+            //writerOther.WriteLine("==OMEGAS==");
+            //for (i = 0; i < countIter; i++)
+            //{
+            //    for (int j = 0; j < towersSize; j++)
+            //    {
+            //        Console.Write("{0:00.0} {1:00.0} |", deltas[i, j], omegas[i, j]);
+            //        writerOther.Write("{0}\t", omegas[i, j]);
+            //    }
+            //    writerOther.WriteLine();
+            //    Console.WriteLine();
+            //}
+            writerOther.WriteLine();
             double[] avDelta = new double[towersSize];
             for (i=0;i< countIter; i++) {
                 for (int j = 0; j < towersSize; j++)
@@ -124,13 +146,17 @@ namespace CheckCalcTower
             }
             Console.WriteLine();
             Console.WriteLine("==avDelta==");
+            writerOther.WriteLine("==avDelta==");
             for (int j = 0; j < towersSize; j++)
                 avDelta[j] = avDelta[j] / countIter;
             for (int j = 0; j < towersSize; j++)
             {
                 Console.Write("{0:00.00}\t", avDelta[j]);
+                writerOther.Write("{0}\t", avDelta[j]);
                 if ((j + 1) % 5 == 0) Console.WriteLine();
             }
+            writerOther.WriteLine();
+            writerOther.WriteLine("Sigma^2");
             Console.WriteLine();
             double[] sigma = new double[towersSize];
             for (int j = 0; j < towersSize; j++)
@@ -138,14 +164,20 @@ namespace CheckCalcTower
                 for (i = 0; i < countIter; i++)
                     sigma[j] += Math.Pow(deltas[i, j] - avDelta[j], 2);
                 sigma[j] = sigma[j] / (countIter - 1);
+                writerOther.Write("{0}\t", sigma[j]);
             }
+            writerOther.WriteLine();
+            writerOther.WriteLine("==SIGMA==");
             Console.WriteLine("==SIGMA==");
             for (int j = 0; j < towersSize; j++)
             {
                 Console.Write("{0:.0}\t", Math.Sqrt(sigma[j]));
+                writerOther.Write("{0}\t", Math.Sqrt(sigma[j]));
                 if ((j + 1) % 5 == 0) Console.WriteLine();
             }
             Console.WriteLine();
+            writerOther.Close();
+            writerDelta.Close();
         }
 
     }
