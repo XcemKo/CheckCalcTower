@@ -96,8 +96,7 @@ namespace CheckCalcTower
                         Other.towers[j].Delta = deltaMap[j] + omegaMap[j];
                     }
 
-                    if (i > 250){
-
+                    if (i > 250) { 
                         calcCenter.CalcKoef();
                         tmpDelta = calcCenter.Delta();
                         for (int j = 0; j < towersSize; j++)
@@ -119,8 +118,6 @@ namespace CheckCalcTower
                         Console.WriteLine(iter);
                         break;
                     }
-
-                      
                 }
             }
             fs.Close();
