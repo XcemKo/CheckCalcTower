@@ -16,6 +16,10 @@ namespace CheckCalcTower
     class Matrix {
         double[,] arr;
         int x, y;
+
+        public int X { get => x; }
+        public int Y { get => y; }
+
         public Matrix(int n) {
             arr = new double[n, n];
             x = y = n;
@@ -31,6 +35,15 @@ namespace CheckCalcTower
         public double this[int i, int j]{
             get {return arr[i,j];       }
             set { arr[i, j] = value;    }
+        }
+
+        public Matrix (Matrix rhs) {
+            arr = new double[rhs.X, rhs.Y];
+            x = rhs.X;
+            y = rhs.Y;
+            for (int i = 0; i < x; i++)
+                for (int j = 0; j < y; j++)
+                    arr[i, j] = rhs.arr[i, j];
         }
 
         public static Matrix operator +(Matrix rhs, Matrix lhs) {
@@ -73,6 +86,48 @@ namespace CheckCalcTower
         public static Matrix operator *(double r, Matrix l) {
             return (l * r);
 
+        }
+
+        public void Transpont() {
+            Matrix tmp = new Matrix(this.y,this.x);
+            for (int i = 0; i < this.y; i++)
+                for (int j = 0; j < this.x; j++)
+                    tmp[i, j] = tmp[j, i];
+            this.arr = new double[this.y, this.x];
+            int t = this.y;
+            this.y = this.x;
+            this.x = t;
+            for (int i = 0; i < this.y; i++)
+                for (int j = 0; j < this.x; j++)
+                    arr[i, j] = tmp[i, j];
+
+        }
+
+        public Matrix DelRowCol(int index) {
+            Matrix ret = new Matrix(x - 1, y - 1);
+            for (int i = 0; i < x; i++)
+            {
+                for (int j = 0; j < y; j++)
+                {
+                    if (j < index)
+                        if (i < index)
+                            ret[i, j] = this[i, j];
+                        else
+                            ret[i - 1, j] = this[i, j];
+                    else if (j == index)
+                        ;
+                    else
+                    {
+                        if (i < index)
+                            ret[i, j - 1] = this[i, j];
+                        else
+                            ret[i - 1, j - 1] = this[i, j];
+                    }
+
+
+                }
+            }
+            return ret;
         }
 
     }
@@ -143,7 +198,7 @@ namespace CheckCalcTower
             int size = towers.Count;
             double[]  ret    = new double[size];
             double[,] answer = new double[size, size];
-
+            Matrix result = new Matrix(A[0].X, A[0].Y);
             for (int i = 0; i < numberOfPacket; i++) {
                 
 
