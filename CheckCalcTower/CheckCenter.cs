@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
+//using MathNet.Numerics.LinearAlgebra;
 using System.Globalization;
 
 namespace CheckCalcTower
@@ -196,7 +197,9 @@ namespace CheckCalcTower
                         else
                             koef[i - 1, j] = koef[i, j];
                     else if (j == index)
+#pragma warning disable CS0642 // Возможно, ошибочный пустой оператор
                         ;
+#pragma warning restore CS0642 // Возможно, ошибочный пустой оператор
                     else
                     {
                         if (i < index)

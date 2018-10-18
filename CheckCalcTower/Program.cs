@@ -60,6 +60,7 @@ namespace CheckCalcTower
             int towersSize = Other.towers.Count();
 
             CheckCenter calcCenter = new CheckCenter(Other.towers);
+            NewCenter newCalcCenter = new NewCenter(Other.towers);
 
             var culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
             culture.NumberFormat.NumberDecimalSeparator = ".";
@@ -85,7 +86,8 @@ namespace CheckCalcTower
                 tmp = fs.ReadLine();
                 string[] array = tmp.Split(',');
                 if (CheckLenght(array)){
-                    calcCenter.GetMetkiFromString(array); i++;
+                    //calcCenter.GetMetkiFromString(array); i++;
+                    newCalcCenter.GetMetkiFromString(array); i++;
 
                     for (int j = 1; j < deltaMap.Length; j++)
                     {
@@ -96,9 +98,13 @@ namespace CheckCalcTower
                         Other.towers[j].Delta = deltaMap[j] + omegaMap[j];
                     }
 
-                    if (i > 250) { 
-                        calcCenter.CalcKoef();
-                        tmpDelta = calcCenter.Delta();
+                    if (i > 250) {
+                        //calcCenter.CalcKoef();
+                        //tmpDelta = calcCenter.Delta();
+                        newCalcCenter.CalcKoef();
+                        tmpDelta = newCalcCenter.Delta();
+                        break;
+
                         for (int j = 0; j < towersSize; j++)
                         {
                             deltas[iter, j] = tmpDelta[j] * 1000_000f;
