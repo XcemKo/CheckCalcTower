@@ -86,7 +86,8 @@ namespace CheckCalcTower
                 tmp = fs.ReadLine();
                 string[] array = tmp.Split(',');
                 if (CheckLenght(array)){
-                    //calcCenter.GetMetkiFromString(array); i++;
+
+                    calcCenter.GetMetkiFromString(array); i++;
                     newCalcCenter.GetMetkiFromString(array); i++;
 
                     for (int j = 1; j < deltaMap.Length; j++)
@@ -98,11 +99,17 @@ namespace CheckCalcTower
                         Other.towers[j].Delta = deltaMap[j] + omegaMap[j];
                     }
 
-                    if (i > 250) {
-                        //calcCenter.CalcKoef();
-                        //tmpDelta = calcCenter.Delta();
+                    //if (i > 250) {
+                    if (i > 25)
+                    {
+                        calcCenter.CalcKoef();
+                        tmpDelta = calcCenter.Delta();
+
+
                         newCalcCenter.CalcKoef();
                         tmpDelta = newCalcCenter.Delta();
+
+
                         break;
 
                         for (int j = 0; j < towersSize; j++)

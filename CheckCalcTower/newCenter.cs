@@ -197,21 +197,22 @@ namespace CheckCalcTower
                     {
                         Z.Add(vec);
                         A.Add(tmp);
+                        numberOfPacket++;
                     }
                     firstIndex = i;
-                    for (int j = i; metki[j].packet != numberOfPacket; j++)
+                    for (int j = i+1; j < metki.Count && metki[j].packet == numberOfPacket; j++)
                         oldIndex = j;
                     parentTime = metki[i].time;
-                    tmp = Matrix<double>.Build.Dense(towers.Count, oldIndex - i);
-                    vec = Vector<double>.Build.Dense(oldIndex - i);
+                    tmp = Matrix<double>.Build.Dense(oldIndex - firstIndex, towers.Count);
+                    vec = Vector<double>.Build.Dense(oldIndex - firstIndex);
                     continue;
                 }
                 else
                 {
-                    tmp[i - firstIndex, metki[i].from] = 1;
-                    tmp[i - firstIndex, metki[i].to]   = -1;
+                    tmp[i - firstIndex-1, metki[i].from] = 1;
+                    tmp[i - firstIndex-1, metki[i].to]   = -1;
                     double c = (Vector3.Distance(towers[metki[i].from].position, towers[metki[i].to].position) / Other.LightSpeed);
-                    vec[i - firstIndex] = (metki[i].time - parentTime - c);
+                    vec[i - firstIndex-1] = (metki[i].time - parentTime - c);
                 }
             }
         }
@@ -226,21 +227,23 @@ namespace CheckCalcTower
             Matrix<double> tmp;
             Matrix<double> first;
             Vector<double> second;
-            for (int i = 0; i < numberOfPacket; i++) {
-				tmp = A[i].RemoveColumn(0).RemoveRow(0).Transpose();
-                tmp *= (A[i] * A[i].Transpose()).Inverse();
+            for (int i = 0; i < numberOfPacket-1; i++) {
 
-                l1.Add(tmp * A[i].RemoveColumn(0).RemoveRow(0));
-				l2.Add(tmp *Z[i]);
+                tmp = (A[i] * A[i].Transpose()).Inverse();
+                tmp = A[i].RemoveColumn(0).Transpose() * tmp;
+                //tmp = A[i].RemoveColumn(0);
+
+                l1.Add(tmp * A[i].RemoveColumn(0));
+				l2.Add(tmp * Z[i]);
             }
             first = l1[0];
             second = l2[0];
-            for (int i = 0; i < numberOfPacket; i++) {
+            for (int i = 0; i < numberOfPacket-1; i++) {
 				first += l1[i];
 				second += l2[i];
 			}
 			result = first * second;
-            Console.Write(result.ToString());
+            Console.WriteLine(result.ToString());
             //int info = 0; alglib.densesolverreport reporter;
             //alglib.rmatrixsolve(answer, size - 2, solKoef, out info, out reporter, out ret);
 

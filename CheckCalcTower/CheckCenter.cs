@@ -263,10 +263,10 @@ namespace CheckCalcTower
             Console.Write("ret = [ ");
             for (int i = 0; i < size; i++)
                 if (solveDelta[i] != 0)
-                    Console.Write("{0:.000_000}; ", solveDelta[i]);
+                    Console.WriteLine("{0:.000_000}; ", solveDelta[i]);
                 else
-                    Console.Write("{0}; ", solveDelta[i]);
-            //Console.WriteLine("] info - {0}", info);
+                    Console.WriteLine("{0}; ", solveDelta[i]);
+            Console.WriteLine("] info - {0}", info);
 
             return solveDelta;
         }
