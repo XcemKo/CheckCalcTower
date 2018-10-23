@@ -149,7 +149,7 @@ namespace CheckCalcTower
                         koef[i, i]++;
                         if (metka.from == i)
                         {
-                            
+
                             koef[i, metka.to]--;
                             //double c = (Vector3.Distance(parent.pos, towers[metka.from].position) -
                             //                            Vector3.Distance(parent.pos, towers[metka.to].position)
@@ -159,7 +159,7 @@ namespace CheckCalcTower
                         }
                         else
                         {
-                            
+
                             koef[i, metka.from]--;
                             //double c = (Vector3.Distance(parent.pos, towers[metka.from].position) -
                             //                            Vector3.Distance(parent.pos, towers[metka.to].position)
@@ -167,6 +167,7 @@ namespace CheckCalcTower
                             double c = (Vector3.Distance(towers[i].position, towers[metka.from].position) / Other.LightSpeed);
                             solKoef[i] -= 0 - metka.time + parent.time + c;
                         }
+
                         //Console.Write("Find {0} {1} -> [{2}{3}]++ \t [{4}{5}]--", metka.from, metka.to
                         //                                                             , i + 1, i + 1
                         //                  , i, (metka.from == i) ? metka.to : metka.from);

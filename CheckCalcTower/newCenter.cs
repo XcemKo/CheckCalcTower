@@ -209,8 +209,8 @@ namespace CheckCalcTower
                 }
                 else
                 {
-                    tmp[i - firstIndex-1, metki[i].from] = 1;
-                    tmp[i - firstIndex-1, metki[i].to]   = -1;
+                    tmp[i - firstIndex-1, metki[i].from] = -1;
+                    tmp[i - firstIndex-1, metki[i].to]   = 1;
                     double c = (Vector3.Distance(towers[metki[i].from].position, towers[metki[i].to].position) / Other.LightSpeed);
                     vec[i - firstIndex-1] = (metki[i].time - parentTime - c);
                 }
@@ -228,7 +228,7 @@ namespace CheckCalcTower
             Matrix<double> first;
             Vector<double> second;
             for (int i = 0; i < numberOfPacket-1; i++) {
-
+                A[i] = A[i].RemoveColumn(6);
                 tmp = (A[i] * A[i].Transpose()).Inverse();
                 tmp = A[i].RemoveColumn(0).Transpose() * tmp;
                 //tmp = A[i].RemoveColumn(0);
@@ -242,11 +242,11 @@ namespace CheckCalcTower
 				first += l1[i];
 				second += l2[i];
 			}
-			result = first * second;
-            Console.WriteLine(result.ToString());
-            //int info = 0; alglib.densesolverreport reporter;
-            //alglib.rmatrixsolve(answer, size - 2, solKoef, out info, out reporter, out ret);
-
+			result = first.Inverse() * second;
+            foreach(var r in result){
+                Console.WriteLine("{0:.000_000}", r);
+            }
+            //Console.WriteLine(result.ToString());
             return ret;
         }
     }

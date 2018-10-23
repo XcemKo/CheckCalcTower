@@ -33,13 +33,12 @@ namespace CheckCalcTower
             double[] deltaMap = {
                 0.000_00,//src31_6_0,
 
-                //0.000_132,//src31_32_0,
-                0.000_001,//src31_32_0,
-                0.000_002,//src31_32_1,
-                0.000_003,//src31_32_2,
-                0.000_004,//src31_32_3,
+                0.000_021,//src31_32_0,
+                0.000_122,//src31_32_1,
+                0.000_033,//src31_32_2,
+                0.000_044,//src31_32_3,
 
-                0.000_005,//src31_40_0,
+                0.000_065,//src31_40_0,
 
                 0.000_130,//src31_130_0,
 
@@ -100,7 +99,7 @@ namespace CheckCalcTower
                     }
 
                     //if (i > 250) {
-                    if (i > 25)
+                    if (i > 250)
                     {
                         calcCenter.CalcKoef();
                         tmpDelta = calcCenter.Delta();
