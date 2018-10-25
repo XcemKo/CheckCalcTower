@@ -184,6 +184,7 @@ namespace CheckCalcTower
         //}
 
         public new void CalcKoef() {
+            Console.WriteLine("{0}", metki.Count);
             Matrix<double> tmp = Matrix<double>.Build.Dense(towers.Count, towers.Count);
             Vector<double> vec = Vector<double>.Build.Dense(towers.Count);
             double parentTime = 0f;
@@ -217,6 +218,14 @@ namespace CheckCalcTower
             }
         }
 
+        public new void reset() {
+            A = new List<Matrix<double>>();
+            Z = new List<Vector<double>>();
+            metki = new List<MetkaNew>();
+            numberOfPacket = 1;
+            time = 0.000_01f;
+        }
+
         public new double[] Delta() {
             int size = towers.Count;
             double[]  ret    = new double[size];
@@ -227,7 +236,8 @@ namespace CheckCalcTower
             Matrix<double> tmp;
             Matrix<double> first;
             Vector<double> second;
-            for (int i = 0; i < numberOfPacket-1; i++) {
+            int i = 0;
+            for (i = 0; i < numberOfPacket-1; i++) {
                 A[i] = A[i].RemoveColumn(6);
                 tmp = (A[i] * A[i].Transpose()).Inverse();
                 tmp = A[i].RemoveColumn(0).Transpose() * tmp;
@@ -238,13 +248,15 @@ namespace CheckCalcTower
             }
             first = l1[0];
             second = l2[0];
-            for (int i = 0; i < numberOfPacket-1; i++) {
+            for (i = 0; i < numberOfPacket-1; i++) {
 				first += l1[i];
 				second += l2[i];
 			}
 			result = first.Inverse() * second;
+            i = 0;
             foreach(var r in result){
                 Console.WriteLine("{0:.000_000}", r);
+                ret[i++] = r;
             }
             //Console.WriteLine(result.ToString());
             return ret;

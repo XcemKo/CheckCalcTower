@@ -73,8 +73,10 @@ namespace CheckCalcTower
 
             FileStream file1 = new FileStream("C:\\Users\\Xcem\\source\\repos\\CheckCalcTower\\CheckCalcTower\\deltas.txt", FileMode.Create, FileAccess.ReadWrite);
             FileStream file2 = new FileStream("C:\\Users\\Xcem\\source\\repos\\CheckCalcTower\\CheckCalcTower\\other.txt", FileMode.Create, FileAccess.ReadWrite);
+            FileStream file3 = new FileStream("C:\\Users\\Xcem\\source\\repos\\CheckCalcTower\\CheckCalcTower\\resss.txt", FileMode.Create, FileAccess.ReadWrite);
             StreamWriter writerDelta = new StreamWriter(file1);
             StreamWriter writerOther = new StreamWriter(file2);
+            StreamWriter writerCmp = new StreamWriter(file3);
 
             StreamReader fs = new StreamReader("C:\\Users\\Xcem\\source\\repos\\CsvParse\\CsvParse\\log8clean.csv");
             fs.ReadLine();
@@ -86,47 +88,53 @@ namespace CheckCalcTower
                 string[] array = tmp.Split(',');
                 if (CheckLenght(array)){
 
-                    calcCenter.GetMetkiFromString(array); i++;
-                    newCalcCenter.GetMetkiFromString(array); i++;
+                    calcCenter.GetMetkiFromString(array);
+                    newCalcCenter.GetMetkiFromString(array);
+                    i++;
 
                     for (int j = 1; j < deltaMap.Length; j++)
                     {
                         //omegaMap[j] = Other.rnd.Next(0, 15)/1000_000f;
-                        omegaMap[j] = Normal(0, 10) / 1000_000f;
+                        omegaMap[j] = Normal(0, 100) / 1000_000f;
 
                         //omegas[iter + 1, j] = omegaMap[j] * 1000_000f;
                         Other.towers[j].Delta = deltaMap[j] + omegaMap[j];
                     }
 
-                    //if (i > 250) {
-                    if (i > 250)
+                    if (i > 1000)
                     {
                         calcCenter.CalcKoef();
                         tmpDelta = calcCenter.Delta();
 
+                        foreach (var t in tmpDelta)
+                            writerCmp.Write("{0}\t", t);
+                        writerCmp.Write("\t\t");
 
                         newCalcCenter.CalcKoef();
                         tmpDelta = newCalcCenter.Delta();
+                        foreach (var t in tmpDelta)
+                            writerCmp.Write("{0}\t", t);
+                        writerCmp.WriteLine("\t\t");
 
+                        //break;
 
-                        break;
-
-                        for (int j = 0; j < towersSize; j++)
+                        /*for (int j = 0; j < towersSize; j++)
                         {
                             deltas[iter, j] = tmpDelta[j] * 1000_000f;
                             writerDelta.Write("{0}\t", deltas[iter, j]);
                         }
                         writerDelta.WriteLine("{0}",iter*i);
-                        //Console.WriteLine(iter * i);
+                        //Console.WriteLine(iter * i);*/
                         i = 0;
                         calcCenter.reset();
-                        
+                        newCalcCenter.reset();
                         iter++;
-                        Console.WriteLine();
+                        
                         //break;
                     }
                     if (iter >= countIter)
                     {
+                        
                         Console.WriteLine(iter);
                         break;
                     }
@@ -187,6 +195,7 @@ namespace CheckCalcTower
             Console.WriteLine();
             writerOther.Close();
             writerDelta.Close();
+            writerCmp.Close();
         }
 
     }

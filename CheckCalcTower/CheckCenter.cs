@@ -133,7 +133,7 @@ namespace CheckCalcTower
             //    }
             //}
 
-
+            Console.WriteLine("{0}", metki.Count);
             for (int i = 0; i < towers.Count; i++)
             {
                 //MetkaNew parent = new MetkaNew();
